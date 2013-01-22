@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 
 import org.ul.gl.GLFormat;
 import org.ul.gl.buffer.client.CTexture;
+import org.ul.gl.math.ivec2;
 
 public class Resource {
 	
@@ -24,7 +25,7 @@ public class Resource {
 		final InputStream in = getInputStream(pngFileName);
 		try {
 			final PNGDecoder decoder = new PNGDecoder(in);
-			final CTexture texture = new CTexture(decoder.getWidth(), decoder.getHeight(), GLFormat.RGBA);
+			final CTexture texture = new CTexture(new ivec2(decoder.getWidth(), decoder.getHeight()), GLFormat.RGBA);
 				decoder.decode(texture.getData().asByteBuffer(), decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
 			texture.write();
 			

@@ -176,6 +176,24 @@ public class SPIglDesktop implements SPIgl {
 	}
 
 	@Override
+	public void glUniformMatrix2(int location, float[] matrix) {
+		final NativeBuffer buffer = new NativeBuffer(16);
+		buffer.putFloat(matrix);
+		buffer.flip();
+			GL20.glUniformMatrix2(location, false, buffer.asFloatBuffer());
+		buffer.dispose();
+	}
+	
+	@Override
+	public void glUniformMatrix3(int location, float[] matrix) {
+		final NativeBuffer buffer = new NativeBuffer(36);
+		buffer.putFloat(matrix);
+		buffer.flip();
+			GL20.glUniformMatrix3(location, false, buffer.asFloatBuffer());
+		buffer.dispose();
+	}
+	
+	@Override
 	public void glUniformMatrix4(int location, float[] matrix) {
 		final NativeBuffer buffer = new NativeBuffer(64);
 		buffer.putFloat(matrix);

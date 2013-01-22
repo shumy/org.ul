@@ -7,8 +7,8 @@ import org.ul.gl.buffer.client.CTexture;
 import org.ul.gl.buffer.tex.GLFrameBuffer;
 import org.ul.gl.buffer.tex.GLRenderBuffer;
 import org.ul.gl.buffer.tex.GLTextureBuffer;
-import org.ul.gl.math.Matrix4f;
-import org.ul.gl.math.Vector3f;
+import org.ul.gl.math.mat4;
+import org.ul.gl.math.vec3;
 import org.ul.gl.shader.GLProgram;
 import org.ul.gl.shader.GLShader;
 import org.ul.gl.shader.GLUniform;
@@ -40,9 +40,9 @@ public class FrameBufferApp implements IApplication {
 	
 	SimpleQuad quad;
 
-	Matrix4f modelMatrix;
-	Matrix4f viewMatrix;
-	Matrix4f projectionMatrix;
+	mat4 modelMatrix;
+	mat4 viewMatrix;
+	mat4 projectionMatrix;
 	
 	GLFrameBuffer fbo;
 	
@@ -52,9 +52,9 @@ public class FrameBufferApp implements IApplication {
 		
 		scene = new GLView();
 		
-		modelMatrix = new Matrix4f().setIdentity();
-		viewMatrix = new Matrix4f().setIdentity();
-		projectionMatrix = new Matrix4f().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
+		modelMatrix = new mat4().setIdentity();
+		viewMatrix = new mat4().setIdentity();
+		projectionMatrix = new mat4().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
 		
 		GLShader vShader = new GLShader(ShaderType.VERTEX, Resource.readText("shader/sun.vert"));
 		GLShader fShader = new GLShader(ShaderType.FRAGMENT, Resource.readText("shader/digit.frag"));
@@ -78,12 +78,12 @@ public class FrameBufferApp implements IApplication {
 		
 		//------------------------------------------------------------------------------------------------------------------
 		program1.use();
-		viewMatrix.setTranslation(new Vector3f(0f, 0f, -1f));
+		viewMatrix.setTranslation(new vec3(0f, 0f, -1f));
 		
 		quad = new SimpleQuad(program1, -0.8f, 0.8f, 0.2f);
 		
 		
-		renderTexture = new GLTextureBuffer(GL.width, GL.height, GLFormat.RGB);
+		renderTexture = new GLTextureBuffer(GL.size, GLFormat.RGB);
 		renderTexture.bindToUnit(1);
 		
 		final CTexture cTexture = Resource.readTexture("texture2.png");
@@ -92,8 +92,8 @@ public class FrameBufferApp implements IApplication {
 		texture2.bindToUnit(2);
 		
 		
-		final GLRenderBuffer renderBuffer = new GLRenderBuffer(GL.width, GL.height, GLFormat.RGB);
-		//final GLTextureBuffer renderBuffer = new GLTextureBuffer(GL.width, GL.height, GLFormat.RGB);
+		final GLRenderBuffer renderBuffer = new GLRenderBuffer(GL.size, GLFormat.RGB);
+		//final GLTextureBuffer renderBuffer = new GLTextureBuffer(GL.size, GLFormat.RGB);
 		
 		fbo = new GLFrameBuffer();
 		fbo.attach(renderBuffer);
@@ -102,7 +102,7 @@ public class FrameBufferApp implements IApplication {
 	
 	@Override
 	public void resize() {
-		scene.setSize(GL.width, GL.height);
+		scene.setSize(GL.size);
 	}
 	
 	@Override
@@ -122,20 +122,20 @@ public class FrameBufferApp implements IApplication {
 	float angle = 45f;
 	long lastTime;
 	
-	final Vector3f translateV = new Vector3f(1.0f, 0f, 0f);
-	final Vector3f scaleV = new Vector3f(2f, 1f, 1f);
+	final vec3 translateV = new vec3(1.0f, 0f, 0f);
+	final vec3 scaleV = new vec3(2f, 1f, 1f);
 
 	
-	final Matrix4f translateM = new Matrix4f().setTranslation(translateV);
-	final Matrix4f scaleM = new Matrix4f().setScale(scaleV);
-	final Matrix4f rotateM = new Matrix4f();
+	final mat4 translateM = new mat4().setTranslation(translateV);
+	final mat4 scaleM = new mat4().setScale(scaleV);
+	final mat4 rotateM = new mat4();
 	
-	final Matrix4f tmpM = new Matrix4f();
+	final mat4 tmpM = new mat4();
 	
 	@Override
 	public void update() {
 		angle += 1.0f;
-		rotateM.setRotation(new Vector3f(0f, 0f, 1f), angle);
+		rotateM.setRotation(new vec3(0f, 0f, 1f), angle);
 
 		index++;
 	}
@@ -147,7 +147,7 @@ public class FrameBufferApp implements IApplication {
 		program1.setUniform(uViewMatrix_p1, viewMatrix);
 		program1.setUniform(uProjectionMatrix_p1, projectionMatrix);
 		
-		final CTexture cTexture = new CTexture(GL.width, GL.height, GLFormat.RGB);
+		final CTexture cTexture = new CTexture(GL.size, GLFormat.RGB);
 		fbo.begin();
 			scene.use();
 			quad.draw();

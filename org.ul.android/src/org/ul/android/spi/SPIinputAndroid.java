@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.ul.gl.math.ivec2;
 import org.ul.spi.SPIinput;
 
 public class SPIinputAndroid implements SPIinput {
@@ -23,17 +24,11 @@ public class SPIinputAndroid implements SPIinput {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 	@Override
-	public int getTouchX() {
+	public ivec2 getTouch() {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getTouchY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	@Override

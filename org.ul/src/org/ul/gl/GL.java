@@ -3,9 +3,10 @@ package org.ul.gl;
 import static org.ul.UL.*;
 import static org.ul.spi.SPIgl.*;
 
+import org.ul.gl.math.ivec2;
+
 public class GL {
-	public static int width;
-	public static int height;
+	public static ivec2 size;
 	public static float aspectRatio;
 
 	public static void init() {
@@ -22,7 +23,7 @@ public class GL {
 		
 		gl.glEnable(GL_SCISSOR_TEST);
 		
-		System.out.println(GL.width + "x" + GL.height + " ratio:" + GL.aspectRatio);
+		System.out.println(size.data[0] + "x" + size.data[1] + " ratio:" + GL.aspectRatio);
 	}
 	
 	public static void errorTest(String msg) {

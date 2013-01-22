@@ -5,6 +5,7 @@ import static org.ul.spi.SPIgl.*;
 
 import org.ul.gl.GLFormat;
 import org.ul.gl.buffer.client.CTexture;
+import org.ul.gl.math.ivec2;
 
 public class GLTextureBuffer extends AGLPixelBuffer {
 	CTexture cTexture;
@@ -14,10 +15,9 @@ public class GLTextureBuffer extends AGLPixelBuffer {
 		alloc();
 	}
 	
-	public GLTextureBuffer(int width, int height, GLFormat format) {
+	public GLTextureBuffer(ivec2 size, GLFormat format) {
 		this.target = Target.TEXTURE;
-		this.width = width;
-		this.height = height;
+		this.size = size;
 		this.format = format;
 		
 		alloc();
@@ -28,7 +28,7 @@ public class GLTextureBuffer extends AGLPixelBuffer {
 		gl.glBindTexture(GL_TEXTURE_2D, id);
 			
 			if(format != null)
-				gl.glTexImage2D(GL_TEXTURE_2D, 0, format.glTextureFormat, width, height, GL_UNSIGNED_BYTE, null);
+				gl.glTexImage2D(GL_TEXTURE_2D, 0, format.glTextureFormat, size.data[0], size.data[1], GL_UNSIGNED_BYTE, null);
 			
 			gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -40,12 +40,11 @@ public class GLTextureBuffer extends AGLPixelBuffer {
 	}
 	
 	public void unpack(CTexture cTexture) {
-		this.width = cTexture.getWidth();
-		this.height = cTexture.getHeight();
+		this.size = cTexture.getSize();
 		this.format = cTexture.getFormat();
 		
 		gl.glBindTexture(GL_TEXTURE_2D, id);
-			gl.glTexImage2D(GL_TEXTURE_2D, 0, format.glTextureFormat, width, height, GL_UNSIGNED_BYTE, cTexture.getData());
+			gl.glTexImage2D(GL_TEXTURE_2D, 0, format.glTextureFormat, size.data[0], size.data[1], GL_UNSIGNED_BYTE, cTexture.getData());
 		gl.glBindTexture(GL_TEXTURE_2D, GL_NONE);
 	}
 	

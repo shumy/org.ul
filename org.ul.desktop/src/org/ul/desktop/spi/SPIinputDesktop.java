@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.ul.gl.math.ivec2;
 import org.ul.spi.SPIinput;
 
 public class SPIinputDesktop implements SPIinput {
@@ -23,13 +24,8 @@ public class SPIinputDesktop implements SPIinput {
 	}
 
 	@Override
-	public int getTouchX() {
-		return Mouse.getX();
-	}
-
-	@Override
-	public int getTouchY() {
-		return Mouse.getY();
+	public ivec2 getTouch() {
+		return new ivec2(Mouse.getX(), Mouse.getY());
 	}
 	
 	@Override

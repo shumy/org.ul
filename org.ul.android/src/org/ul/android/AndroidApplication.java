@@ -9,6 +9,7 @@ import org.ul.android.spi.SPIglAndroid;
 import org.ul.android.spi.SPIinputAndroid;
 import org.ul.android.spi.SPIvfsAndroid;
 import org.ul.gl.GL;
+import org.ul.gl.math.ivec2;
 import org.ul.util.NativeLoader;
 
 import android.app.Activity;
@@ -112,9 +113,8 @@ public class AndroidApplication extends Activity {
 		
 		@Override
 		public void onSurfaceChanged(GL10 gl, int width, int height) {
-			GL.width = width;
-			GL.height = height;
-			GL.aspectRatio = GL.width/(float)GL.height;
+			GL.size = new ivec2(width, height);
+			GL.aspectRatio = GL.size.ratio();
 			
 			if(!isInited) {
 				System.out.println("init");

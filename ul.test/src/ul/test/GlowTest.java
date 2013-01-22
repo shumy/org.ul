@@ -8,8 +8,9 @@ import org.ul.gl.GLFormat;
 import org.ul.gl.buffer.tex.GLFrameBuffer;
 import org.ul.gl.buffer.tex.GLTextureBuffer;
 import org.ul.gl.entity.GLVertexArray.DrawPrimitive;
-import org.ul.gl.math.Matrix4f;
-import org.ul.gl.math.Vector3f;
+import org.ul.gl.math.ivec2;
+import org.ul.gl.math.mat4;
+import org.ul.gl.math.vec3;
 import org.ul.gl.shader.GLAttribute;
 import org.ul.gl.shader.GLProgram;
 import org.ul.gl.shader.GLShader;
@@ -51,9 +52,9 @@ public class GlowTest implements IApplication {
 	Square line;
 	RenderQuad renderQuad;
 
-	Matrix4f modelMatrix;
-	Matrix4f viewMatrix;
-	Matrix4f projectionMatrix;
+	mat4 modelMatrix;
+	mat4 viewMatrix;
+	mat4 projectionMatrix;
 	
 	GLFrameBuffer fbo1;
 	GLFrameBuffer fbo2;
@@ -67,11 +68,11 @@ public class GlowTest implements IApplication {
 		
 		int size = 256;
 		offline = new GLView();
-		offline.setSize(size, size);
+		offline.setSize(new ivec2(size, size));
 		
-		modelMatrix = new Matrix4f().setIdentity();
-		viewMatrix = new Matrix4f().setIdentity().setTranslation(new Vector3f(0f, 0f, -1.5f));
-		projectionMatrix = new Matrix4f().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
+		modelMatrix = new mat4().setIdentity();
+		viewMatrix = new mat4().setIdentity().setTranslation(new vec3(0f, 0f, -1.5f));
+		projectionMatrix = new mat4().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
 		
 		initDrawProgram();
 		initBlurProgram();
@@ -81,17 +82,17 @@ public class GlowTest implements IApplication {
 		line = new Square(drawProgram, -1f, 1f, 0.5f, 1.5f);
 		renderQuad = new RenderQuad(blurProgram);
 		
-		texture1 = new GLTextureBuffer(GL.width, GL.height, GLFormat.RGB);
+		texture1 = new GLTextureBuffer(GL.size, GLFormat.RGB);
 		texture1.bindToUnit(1);
 		fbo1 = new GLFrameBuffer();
 		fbo1.attach(texture1);
 		
-		texture2 = new GLTextureBuffer(GL.width, GL.height, GLFormat.RGB);
+		texture2 = new GLTextureBuffer(GL.size, GLFormat.RGB);
 		texture2.bindToUnit(2);
 		fbo2 = new GLFrameBuffer();
 		fbo2.attach(texture2);
 		
-		texture3 = new GLTextureBuffer(GL.width, GL.height, GLFormat.RGB);
+		texture3 = new GLTextureBuffer(GL.size, GLFormat.RGB);
 		texture3.bindToUnit(3);
 		fbo3 = new GLFrameBuffer();
 		fbo3.attach(texture3);
@@ -152,7 +153,7 @@ public class GlowTest implements IApplication {
 	
 	@Override
 	public void resize() {
-		scene.setSize(GL.width, GL.height);
+		scene.setSize(GL.size);
 	}
 	
 	@Override
@@ -179,7 +180,7 @@ public class GlowTest implements IApplication {
 	
 	public void draw() {
 		drawProgram.use();
-		drawProgram.setUniform(uColor, 0.0f, 1.0f, 0.0f);
+		drawProgram.setUniform(uColor, new vec3(0.0f, 1.0f, 0.0f));
 		drawProgram.setUniform(uModelMatrix, modelMatrix);
 		drawProgram.setUniform(uViewMatrix, viewMatrix);
 		drawProgram.setUniform(uProjectionMatrix, projectionMatrix);
@@ -195,8 +196,8 @@ public class GlowTest implements IApplication {
 	
 	public void blur() {
 		final float scale = 1f;
-		final float pixelWidth = scale/(float)scene.getWidth();
-		final float pixelHeight = scale/(float)scene.getHeight();
+		final float pixelWidth = scale/(float)scene.getSize().data[0];
+		final float pixelHeight = scale/(float)scene.getSize().data[1];
 		
 		if(blur > 30) blurDirection = -1;
 		if(blur < 2) blurDirection = 1;

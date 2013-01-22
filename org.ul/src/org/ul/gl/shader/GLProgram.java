@@ -6,8 +6,15 @@ import static org.ul.spi.SPIgl.*;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.ul.gl.math.Matrix4f;
-import org.ul.gl.math.Vector3f;
+import org.ul.gl.math.ivec2;
+import org.ul.gl.math.ivec3;
+import org.ul.gl.math.ivec4;
+import org.ul.gl.math.mat2;
+import org.ul.gl.math.mat3;
+import org.ul.gl.math.mat4;
+import org.ul.gl.math.vec2;
+import org.ul.gl.math.vec3;
+import org.ul.gl.math.vec4;
 import org.ul.gl.shader.GLVar.ElementType;
 
 public final class GLProgram {	
@@ -108,101 +115,48 @@ public final class GLProgram {
 		
 		gl.glUniform1i(var.getId(), textureUnit);
 	}
-	
-	public void setUniform(GLUniform var, Matrix4f value) {
-		if(var.getElementType() != ElementType.MATRIX || var.getElementSize() != value.diagonalSize)
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
 
+	public void setUniform(GLUniform var, mat2 value) {
+		gl.glUniformMatrix2(var.getId(), value.data);
+	}
+	
+	public void setUniform(GLUniform var, mat3 value) {
+		gl.glUniformMatrix3(var.getId(), value.data);
+	}
+	
+	public void setUniform(GLUniform var, mat4 value) {
 		gl.glUniformMatrix4(var.getId(), value.data);
 	}
 	
+	public void setUniform(GLUniform var, float value) {
+		gl.glUniform1f(var.getId(), value);
+	}
+			
+	public void setUniform(GLUniform var, vec2 value) {
+		gl.glUniform2f(var.getId(), value.data[0], value.data[1]);
+	}
 	
-	public void setUniform(GLUniform var, Vector3f value) {
-		if(var.getElementType() != ElementType.FLOAT || var.getElementSize() != 3) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
+	public void setUniform(GLUniform var, vec3 value) {
 		gl.glUniform3f(var.getId(), value.data[0], value.data[1], value.data[2]);
 	}
 	
-	public void setUniform(GLUniform var, float value) {
-		if(var.getElementType() != ElementType.FLOAT || var.getElementSize() != 1)
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		gl.glUniform1f(var.getId(), value);
+	public void setUniform(GLUniform var, vec4 value) {
+		gl.glUniform4f(var.getId(), value.data[0], value.data[1], value.data[2], value.data[3]);
 	}
-	
-	public void setUniform(GLUniform var, float v0, float v1) {
-		if(var.getElementType() != ElementType.FLOAT || var.getElementSize() != 2) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		gl.glUniform2f(var.getId(), v0, v1);
-	}
-	
-	public void setUniform(GLUniform var, float v0, float v1, float v2) {
-		if(var.getElementType() != ElementType.FLOAT || var.getElementSize() != 3) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		gl.glUniform3f(var.getId(), v0, v1, v2);
-	}
-	
-	public void setUniform(GLUniform var, float v0, float v1, float v2, float v3) {
-		if(var.getElementType() != ElementType.FLOAT || var.getElementSize() != 4) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		gl.glUniform4f(var.getId(), v0, v1, v2, v3);
-	}
-	
 	
 	public void setUniform(GLUniform var, int value) {
-		if(var.getElementType() != ElementType.INT || var.getElementSize() != 1) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
 		gl.glUniform1i(var.getId(), value);
 	}
-	
-	public void setUniform(GLUniform var, int v0, int v1) {
-		if(var.getElementType() != ElementType.INT || var.getElementSize() != 2) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		gl.glUniform2i(var.getId(), v0, v1);
+
+	public void setUniform(GLUniform var, ivec2 value) {
+		gl.glUniform2i(var.getId(), value.data[0], value.data[1]);
 	}
 	
-	public void setUniform(GLUniform var, int v0, int v1, int v2) {
-		if(var.getElementType() != ElementType.INT || var.getElementSize() != 3) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		gl.glUniform3i(var.getId(), v0, v1, v2);
+	public void setUniform(GLUniform var, ivec3 value) {
+		gl.glUniform3i(var.getId(), value.data[0], value.data[1], value.data[2]);
 	}
 	
-	public void setUniform(GLUniform var, int v0, int v1, int v2, int v3) {
-		if(var.getElementType() != ElementType.INT || var.getElementSize() != 3) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		gl.glUniform4i(var.getId(), v0, v1, v2, v3);
+	public void setUniform(GLUniform var, ivec4 value) {
+		gl.glUniform4i(var.getId(), value.data[0], value.data[1], value.data[2], value.data[3]);
 	}
-	
-	/*public void setUniform(GLUniform var, float ...value) {
-		if(var.getElementType() != ElementType.FLOAT || var.getElementSize() != value.length) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		switch(value.length) {
-			case 1: glUniform1f(var.getId(), value[0]); break;
-			case 2: glUniform2f(var.getId(), value[0], value[1]); break;
-			case 3: glUniform3f(var.getId(), value[0], value[1], value[2]); break;
-			case 4: glUniform4f(var.getId(), value[0], value[1], value[2], value[3]); break;
-		}
-	}
-	
-	
-	public void setUniform(GLUniform var, int ...value) {
-		if(var.getElementType() != ElementType.INT || var.getElementSize() != value.length) 
-			throw new RuntimeException("Format exception for uniform: "+var.getName());
-		
-		switch(value.length) {
-			case 1: glUniform1i(var.getId(), value[0]); break;
-			case 2: glUniform2i(var.getId(), value[0], value[1]); break;
-			case 3: glUniform3i(var.getId(), value[0], value[1], value[2]); break;
-			case 4: glUniform4i(var.getId(), value[0], value[1], value[2], value[3]); break;
-		}
-	}*/
 }

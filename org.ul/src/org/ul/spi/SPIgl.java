@@ -180,6 +180,8 @@ public interface SPIgl {
 	void glUniform2f(int location, float v0, float v1);
 	void glUniform3f(int location, float v0, float v1, float v2);
 	void glUniform4f(int location, float v0, float v1, float v2, float v3);
+	void glUniformMatrix2(int location, float[] matrix);
+	void glUniformMatrix3(int location, float[] matrix);
 	void glUniformMatrix4(int location, float[] matrix);
 	
 	void glPixelStorei(int pname, int param);

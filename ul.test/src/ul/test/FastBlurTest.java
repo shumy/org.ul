@@ -2,8 +2,6 @@ package ul.test;
 
 import static java.lang.System.out;
 
-import java.util.Set;
-
 import org.ul.IApplication;
 import org.ul.UL;
 import org.ul.gl.GL;
@@ -11,8 +9,10 @@ import org.ul.gl.GLFormat;
 import org.ul.gl.buffer.tex.GLFrameBuffer;
 import org.ul.gl.buffer.tex.GLTextureBuffer;
 import org.ul.gl.entity.GLVertexArray.DrawPrimitive;
-import org.ul.gl.math.Matrix4f;
-import org.ul.gl.math.Vector3f;
+import org.ul.gl.math.ivec2;
+import org.ul.gl.math.ivec3;
+import org.ul.gl.math.mat4;
+import org.ul.gl.math.vec3;
 import org.ul.gl.shader.GLAttribute;
 import org.ul.gl.shader.GLProgram;
 import org.ul.gl.shader.GLShader;
@@ -21,8 +21,6 @@ import org.ul.gl.shader.GLShader.ShaderType;
 import org.ul.gl.view.GLView;
 import org.ul.spi.SPIinput;
 import org.ul.vfs.Resource;
-
-import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 import ul.test.unit.RenderQuad;
 import ul.test.unit.Square;
@@ -50,9 +48,9 @@ public class FastBlurTest implements IApplication {
 	Square obj2;
 	RenderQuad renderQuad;
 
-	Matrix4f modelMatrix;
-	Matrix4f viewMatrix;
-	Matrix4f projectionMatrix;
+	mat4 modelMatrix;
+	mat4 viewMatrix;
+	mat4 projectionMatrix;
 	
 	GLFrameBuffer fbo1;
 	GLFrameBuffer fbo2;
@@ -64,11 +62,11 @@ public class FastBlurTest implements IApplication {
 		scene = new GLView();
 		
 		offline = new GLView();
-		offline.setSize((int)(GL.width*1.0), (int)(GL.height*1.0));
+		offline.setSize(GL.size);
 		
-		modelMatrix = new Matrix4f().setIdentity();
-		viewMatrix = new Matrix4f().setIdentity().setTranslation(new Vector3f(0f, 0f, -1.0f));
-		projectionMatrix = new Matrix4f().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
+		modelMatrix = new mat4().setIdentity();
+		viewMatrix = new mat4().setIdentity().setTranslation(new vec3(0f, 0f, -1.0f));
+		projectionMatrix = new mat4().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
 		
 		initDrawProgram();
 		initBlurProgram();
@@ -78,12 +76,12 @@ public class FastBlurTest implements IApplication {
 		obj2 = new Square(drawProgram, -0.49f, 0.49f, 0.98f, 0.98f);
 		renderQuad = new RenderQuad(blurProgram);
 		
-		texture1 = new GLTextureBuffer(offline.getWidth(), offline.getHeight(), GLFormat.RGB);
+		texture1 = new GLTextureBuffer(offline.getSize(), GLFormat.RGB);
 		texture1.bindToUnit(1);
 		fbo1 = new GLFrameBuffer();
 		fbo1.attach(texture1);
 		
-		texture2 = new GLTextureBuffer(offline.getWidth(), offline.getHeight(), GLFormat.RGB);
+		texture2 = new GLTextureBuffer(offline.getSize(), GLFormat.RGB);
 		texture2.bindToUnit(2);
 		fbo2 = new GLFrameBuffer();
 		fbo2.attach(texture2);
@@ -131,7 +129,7 @@ public class FastBlurTest implements IApplication {
 	
 	@Override
 	public void resize() {
-		scene.setSize(GL.width, GL.height);
+		scene.setSize(GL.size);
 	}
 	
 	@Override
@@ -148,14 +146,17 @@ public class FastBlurTest implements IApplication {
 	
 	@Override
 	public void update() {
-		int x = UL.input.getTouchX();
-		int y = UL.input.getTouchY();
+		final ivec2 pos = UL.input.getTouch();
 		
 		if(UL.input.isTouchLeftDown()) {
-			//System.out.println("x:" + x + " y:" + y);
+			System.out.println(pos);
+			//System.out.println(proj);
+			
+			/*
 			for(SPIinput.Key key: UL.input.getKeys()) {
 				System.out.print(key.name() + ", ");
 			}
+			*/
 		}
 	}
 	
@@ -166,7 +167,7 @@ public class FastBlurTest implements IApplication {
 	}
 	
 	float angle = 1.0f;
-	final Vector3f rotVec = new Vector3f(0f, 0f, 1f);
+	final vec3 rotVec = new vec3(0f, 0f, 1f);
 	
 	public void draw() {
 		angle += 0.2f;
@@ -179,10 +180,10 @@ public class FastBlurTest implements IApplication {
 			offline.use();
 			offline.clear();
 			
-			drawProgram.setUniform(uColor, 0.0f, 1.0f, 0.0f);
+			drawProgram.setUniform(uColor, new vec3(0.0f, 1.0f, 0.0f));
 			obj1.draw(DrawPrimitive.LINE_LOOP);
 			
-			drawProgram.setUniform(uColor, 1.0f, 0.0f, 0.0f);
+			drawProgram.setUniform(uColor, new vec3(1.0f, 0.0f, 0.0f));
 			obj2.draw(DrawPrimitive.LINE_LOOP);
 		
 		fbo1.end();
@@ -195,8 +196,8 @@ public class FastBlurTest implements IApplication {
 		
 		//final float scale = ((float)Math.sin(blurScale) + 1f) * 10f + 2f;
 		final float scale = 1f;
-		final float pixelWidth = scale/(float)scene.getWidth();
-		final float pixelHeight = scale/(float)scene.getHeight();
+		final float pixelWidth = scale/(float)scene.getSize().data[0];
+		final float pixelHeight = scale/(float)scene.getSize().data[1];
 
 		blurProgram.use();
 		

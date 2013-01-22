@@ -4,13 +4,13 @@ import static org.ul.UL.*;
 import static org.ul.spi.SPIgl.*;
 
 import org.ul.gl.GLFormat;
+import org.ul.gl.math.ivec2;
 
 public class GLRenderBuffer extends AGLPixelBuffer {
 	
-	public GLRenderBuffer(int width, int height, GLFormat format) {
+	public GLRenderBuffer(ivec2 size, GLFormat format) {
 		this.target = Target.RENDER;
-		this.width = width;
-		this.height = height;
+		this.size = size;
 		this.format = format;
 		
 
@@ -21,7 +21,7 @@ public class GLRenderBuffer extends AGLPixelBuffer {
 		id = gl.glGenRenderBuffer();
 
 		gl.glBindRenderBuffer(GL_RENDERBUFFER, id);
-			gl.glRenderBufferStorage(GL_RENDERBUFFER, format.glRenderFormat, width, height);
+			gl.glRenderBufferStorage(GL_RENDERBUFFER, format.glRenderFormat, size.data[0], size.data[1]);
 		gl.glBindRenderBuffer(GL_RENDERBUFFER, GL_NONE);
 	}
 

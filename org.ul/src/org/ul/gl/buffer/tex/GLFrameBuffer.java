@@ -37,7 +37,8 @@ public class GLFrameBuffer extends AGLBuffer {
 	}
 
 	public void pack(CTexture cTexture) {
-		gl.glReadPixels(0, 0, cTexture.getWidth(), cTexture.getHeight(), cTexture.getFormat().glTextureFormat, GL_UNSIGNED_BYTE, cTexture.getData());
+		gl.glReadPixels(0, 0, cTexture.getSize().data[0], cTexture.getSize().data[1], 
+				cTexture.getFormat().glTextureFormat, GL_UNSIGNED_BYTE, cTexture.getData());
 	}
 
 }

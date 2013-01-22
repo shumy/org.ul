@@ -207,7 +207,17 @@ public class SPIglAndroid implements SPIgl {
 		GLES20.glGetActiveAttrib(program, index, 0, ignore, 0, size, 0, ignore, 0, ignoreb, 0);
 		return size[0];
 	}
+	
+	@Override
+	public void glUniformMatrix2(int location, float[] matrix) {
+		GLES20.glUniformMatrix2fv(location, 1, false, matrix, 0);
+	}
 
+	@Override
+	public void glUniformMatrix3(int location, float[] matrix) {
+		GLES20.glUniformMatrix3fv(location, 1, false, matrix, 0);
+	}
+	
 	@Override
 	public void glUniformMatrix4(int location, float[] matrix) {
 		GLES20.glUniformMatrix4fv(location, 1, false, matrix, 0);

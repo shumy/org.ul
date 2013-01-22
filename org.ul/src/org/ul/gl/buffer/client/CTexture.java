@@ -2,22 +2,21 @@ package org.ul.gl.buffer.client;
 
 import org.ul.gl.GLFormat;
 import org.ul.gl.buffer.tex.GLTextureBuffer;
+import org.ul.gl.math.ivec2;
 import org.ul.util.NativeBuffer;
 
 public class CTexture extends ACBuffer<GLTextureBuffer> {
-	final int width, height;
+	final ivec2 size;
 	final GLFormat format;
 	
-	public int getWidth() {return width;}
-	public int getHeight() {return height;}
+	public ivec2 getSize() {return size;}
 	public GLFormat getFormat() {return format;}
 	
-	public CTexture(int width, int height, GLFormat format) {
-		this.width = width;
-		this.height = height;
+	public CTexture(ivec2 size, GLFormat format) {
+		this.size = size;
 		this.format = format;
 		
-		this.buffer = new NativeBuffer(width * height * format.glBytesPerPixel);
+		this.buffer = new NativeBuffer(size.componentMultiply() * format.glBytesPerPixel);
 	}
 	
 	@Override

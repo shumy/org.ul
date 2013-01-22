@@ -4,8 +4,8 @@ import static java.lang.System.out;
 
 import org.ul.IApplication;
 import org.ul.gl.GL;
-import org.ul.gl.math.Matrix4f;
-import org.ul.gl.math.Vector3f;
+import org.ul.gl.math.mat4;
+import org.ul.gl.math.vec3;
 import org.ul.gl.shader.GLAttribute;
 import org.ul.gl.shader.GLProgram;
 import org.ul.gl.shader.GLShader;
@@ -31,9 +31,9 @@ public class TestApp implements IApplication {
 	
 	SimpleQuad quad;
 
-	Matrix4f modelMatrix;
-	Matrix4f viewMatrix;
-	Matrix4f projectionMatrix;
+	mat4 modelMatrix;
+	mat4 viewMatrix;
+	mat4 projectionMatrix;
 	
 	@Override
 	public void init() {
@@ -41,9 +41,9 @@ public class TestApp implements IApplication {
 		
 		scene = new GLView();
 		
-		modelMatrix = new Matrix4f().setIdentity();
-		viewMatrix = new Matrix4f().setIdentity();
-		projectionMatrix = new Matrix4f().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
+		modelMatrix = new mat4().setIdentity();
+		viewMatrix = new mat4().setIdentity();
+		projectionMatrix = new mat4().setPerspective(60f, GL.aspectRatio, 0.1f, 100f);
 		
 		vShader = new GLShader(ShaderType.VERTEX, Resource.readText("shader/sun.vert"));
 		fShader = new GLShader(ShaderType.FRAGMENT, Resource.readText("shader/digit.frag"));
@@ -62,14 +62,14 @@ public class TestApp implements IApplication {
 		
 		//------------------------------------------------------------------------------------------------------------------
 		program.use();
-		viewMatrix.setTranslation(new Vector3f(0f, 0f, -1f));
+		viewMatrix.setTranslation(new vec3(0f, 0f, -1f));
 		
 		quad = new SimpleQuad(program, -0.8f, 0.8f, 0.2f);
 	}
 	
 	@Override
 	public void resize() {
-		scene.setSize(GL.width, GL.height);
+		scene.setSize(GL.size);
 	}
 	
 	@Override
@@ -84,15 +84,15 @@ public class TestApp implements IApplication {
 	float angle = 45f;
 	long lastTime;
 	
-	final Vector3f translateV = new Vector3f(1.0f, 0f, 0f);
-	final Vector3f scaleV = new Vector3f(2f, 1f, 1f);
+	final vec3 translateV = new vec3(1.0f, 0f, 0f);
+	final vec3 scaleV = new vec3(2f, 1f, 1f);
 
 	
-	final Matrix4f translateM = new Matrix4f().setTranslation(translateV);
-	final Matrix4f scaleM = new Matrix4f().setScale(scaleV);
-	final Matrix4f rotateM = new Matrix4f();
+	final mat4 translateM = new mat4().setTranslation(translateV);
+	final mat4 scaleM = new mat4().setScale(scaleV);
+	final mat4 rotateM = new mat4();
 	
-	final Matrix4f tmpM = new Matrix4f();
+	final mat4 tmpM = new mat4();
 	
 	@Override
 	public void update() {
@@ -102,7 +102,7 @@ public class TestApp implements IApplication {
 		lastTime = time;*/
 		
 		angle += 1.0f;
-		rotateM.setRotation(new Vector3f(0f, 0f, 1f), angle);
+		rotateM.setRotation(new vec3(0f, 0f, 1f), angle);
 		
 		//modelMatrix.setMultiply(rotateM, tmpM.setMultiply(translateM, scaleM));
 		//modelMatrix.setMultiply(rotateM, tmpM.setMultiplyScale(translateM, scaleV));

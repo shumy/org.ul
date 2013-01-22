@@ -2,6 +2,8 @@ package org.ul.spi;
 
 import java.util.Set;
 
+import org.ul.gl.math.ivec2;
+
 public interface SPIinput {
 	enum Key {
 		KEY_ESCAPE, KEY_HOME,
@@ -105,8 +107,7 @@ public interface SPIinput {
 	
 	boolean isTouchLeftDown();
 	boolean isTouchRightDown();
-	int getTouchX();
-	int getTouchY();
+	ivec2 getTouch();
 	
 	Set<Key> getKeys();
 }

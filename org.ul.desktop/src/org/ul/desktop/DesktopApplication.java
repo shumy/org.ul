@@ -8,6 +8,7 @@ import org.ul.desktop.spi.SPIglDesktop;
 import org.ul.desktop.spi.SPIinputDesktop;
 import org.ul.desktop.spi.SPIvfsDesktop;
 import org.ul.gl.GL;
+import org.ul.gl.math.ivec2;
 import org.ul.util.NativeLoader;
 
 public class DesktopApplication {
@@ -44,9 +45,8 @@ public class DesktopApplication {
 			Display.setTitle("Shader Example");
 			Display.create();
 				
-			GL.width = Display.getWidth();
-			GL.height = Display.getHeight();
-			GL.aspectRatio = GL.width/(float)GL.height;
+			GL.size = new ivec2(Display.getWidth(), Display.getHeight());
+			GL.aspectRatio = GL.size.ratio();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
