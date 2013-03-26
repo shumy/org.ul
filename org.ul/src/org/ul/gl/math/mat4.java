@@ -161,6 +161,8 @@ public class mat4 extends mat<mat4> {
 	 * @return Itself for convenience.
 	 */
 	public mat4 setInvert(mat4 toInvert) {
+		//from http://www.geometrictools.com/Documentation/LaplaceExpansionTheorem.pdf
+		
 		final float[] a = toInvert.data;
 		final float[] s = new float[6];
 		final float[] c = new float[6];
